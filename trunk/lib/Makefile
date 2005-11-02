@@ -6,20 +6,16 @@ LIBVER=$(LIBMAJVER).$(LIBMINVER)
 INCLUDES=../include/lockbox.h ../include/linux/lockbox.h
 TARGETS=liblockbox$(LIBEXT).a liblockbox$(LIBEXT).so.$(LIBVER)
 CFLAGS=$(ARCHFLAGS) -fpic -g -I../include
+PLATFORM=$(shell uname -m)
 
+ifeq "$(PLATFORM)" "x86_64"
 default: 
-	( \
-		case `uname -m` in \
-		x86_64) \
-			make ARCHFLAGS=-m64 LIBEXT=64 libs && \
-			make ARCHFLAGS="-V 3.4 -m32" LIBEXT= libs || \
-			exit 1 \
-			;; \
-		*) \
-			make ARCHFLAGS= LIBEXT= libs || exit 1 \
-			;; \
-		esac \
-	)
+	make ARCHFLAGS=-m64 LIBEXT=64 libs
+	make ARCHFLAGS="-V 3.4 -m32" LIBEXT= libs
+else
+default:
+	make ARCHFLAGS= LIBEXT= libs
+endif
 
 libs: $(TARGETS)
 
