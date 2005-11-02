@@ -7,11 +7,11 @@
 		<link rel="stylesheet" href="styles.css" type="text/css" />
 	</head>
 	<body>
-	<table border="0">
+	<table border="0" summary="Layout Control Table">
 		<tr>
 			<td rowspan="3" nowrap="1" valign="top" class="navigation">
 				<p align="center" valign="top">
-					<img src="lockbox.gif" /><br />
+					<img src="lockbox.gif" alt="Lockbox logo" /><br />
 					Lockbox API
 				</p>
 				<p>
