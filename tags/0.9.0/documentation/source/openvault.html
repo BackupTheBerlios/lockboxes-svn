@@ -1,0 +1,86 @@
+__HEAD__:lkb_openvault
+__SEEA__:closevault.html
+__SEEA__:listvaults.html
+__SEEA__:create.html
+__SEEA__:open.html
+__SEEA__:setselectcriterion.html
+<h2>Name</h2>
+
+<p>lkb_openvault - open a vault</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_openvault(char const *<var>vaultname</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_openvault opens a lockbox vault with the given <var>vaultname</var>. If
+	the vault does not already exist, it is created. A process can only have one
+	vault open at a time.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_openvault returns a file descriptor that can be used in
+	select(2) or poll(2) to see if any lockbox selection criteria have been
+	met. On failure it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table summary="errors">
+	<tr>
+		<td valign="top">
+			EBUSY
+		</td>
+		<td valign="top">
+			Another vault is already open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			The lockbox module is not installed.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You are not authorised to use lockboxes.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			<var>vaultname</var> is not the address of a valid string.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOMEM
+		</td>
+		<td valign="top">
+			The system ran out of memory during the call.
+		</td>
+	</tr>
+		
+</table>

@@ -1,0 +1,131 @@
+__HEAD__:lkb_create
+__SEEA__:openvault.html
+__SEEA__:open.html
+__SEEA__:close.html
+__SEEA__:setacl.html
+__SEEA__:getname.html
+__SEEA__:listboxes.html
+__SEEA__:acl.html
+<h2>Name</h2>
+
+<p>lkb_create - create a lockbox on a shelf in the current vault</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+lockbox_t lkb_create(	int <var>shelf</var>,
+			char const *<var>name</var>,
+			char const *<var>data</var>,
+			char const *<var>size</var>,
+			lockbox_acl const *<var>acl</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_create creates a lockbox on the specified <var>shelf</var> in the current
+	vault. If <var>name</var> is given, it is the name of the new lockbox. If
+	<var>name</var> is NULL, the system will assign a name to the lockbox of the form
+	"#nnnnnnnn" where "nnnnnnnn" is a series of hexadecimal digits. The name can be
+	retrieved using <a href="getname.html">lkb_getname</a>.
+</p>
+
+<p>
+	If <var>size</var> is not NULL, <var>data</var> is a pointer to a buffer containing
+	<var>size</var> bytes that will populate the initial data in the lockbox's data
+	area.
+</p>
+
+<p>
+	If <var>acl</var> is not NULL, it contains the initial access control list for
+	the lockbox. If <var>acl</var> is NULL, the initial access control list of the
+	box will give the user indicated by the current effective user ID LKB_ACCESS_ALL,
+	and gives all users LKB_ACCESS_READ and LKB_ACCESS_OPEN.
+</p>
+
+<p>
+	Shelves allow applications that are using lockboxes to group their lockboxes
+	according to their data structure and purpose. By doing this, applications that
+	are seeking a lockbox containing data of a particular type can use
+	<a href="listboxes.html">lkb_listboxes</a> to search through the available
+	lockboxes on the shelf for that type of data.
+</p>
+
+<p>
+	Lower values of <var>shelf</var> are to be preferred because they are faster to
+	access. When a vault is initially created, a fixed number of shelves (the number
+	is system-dependent) are created with it. The lowest numbered shelf is shelf 0.
+	Additional shelves are allocated in groups of some system-dependent constant
+	number of shelves.  When you add a box to a shelf that does not yet exist, that
+	shelf is created together with any lower numbered shelves not yet created, and
+	possibly some more higher numbered shelves.
+</p>
+
+<p>
+	Applications using lockboxes should accordingly use shelf numbers starting at 0
+	and increasing by 1 without any gaps.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_create returns a lockbox handle. On failure, it returns
+	LOCKBOX_ERROR.
+</p>
+
+<h2>Errors</h2>
+
+<table summary="errors">
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINVAL
+		</td>
+		<td valign="top">
+			<var>name</var> is an empty string.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EEXIST
+		</td>
+		<td valign="top">
+			<var>name</var> is the name of a lockbox that already exists.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			<var>name</var> is not null but does not point to a valid address
+			of a string, <var>data</var> does not point to a valid address
+			of a buffer containing <var>size</var> bytes, or <var>acl</var>
+			does not point to the address of a valid access control list.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOMEM
+		</td>
+		<td valign="top">
+			The system ran out of memory.
+		</td>
+	</tr>
+</table>

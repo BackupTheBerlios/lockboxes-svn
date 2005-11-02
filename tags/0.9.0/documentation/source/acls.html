@@ -1,0 +1,26 @@
+__HEAD__:Using Access Control Lists
+__SEEA__:create.html
+__SEEA__:setacl.html
+__SEEA__:getacl.html
+<p>
+	A process that has a lockbox handle can use it to set the <a href="acl.html">access
+	control list</a> of the lockbox by calling <a href="setacl.html">lkb_setacl</a> and
+	retrieve the <a href="acl.html">access control list</a> of the lockbox by calling
+	<a href="getacl.html">lkb_getacl</a>. A process that is creating a lockbox can set
+	an initial <a href="acl.html">access control list</a> in the call to
+	<a href="create.html">lkb_create</a>.
+</p>
+<p>
+	Access control lists can be used to grant access to processes, users, groups or
+	"the world" to read and write the data, file, state bits and access control list
+	of a lockbox, and to open or lock the lockbox. If the process attempts a call for
+	which it does not have permission in the access control list, the call will fail
+	and set <u>errno</u> to EPERM.
+</p>
+<p>
+	A process that seeks to prevent other processes from opening a lockbox it creates
+	should pass an access control list to <a href="create.html">lkb_create</a>,
+	otherwise it is possible that another application will succeed in opening the
+	lockbox between the call to <a href="create.html">lkb_create</a> and the
+	subsequent call to <a href="setacl.html">lkb_setacl.html</a>.
+</p>

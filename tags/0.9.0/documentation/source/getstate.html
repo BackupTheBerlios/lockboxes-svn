@@ -1,0 +1,81 @@
+__HEAD__:lkb_getstate
+__SEEA__:create.html
+__SEEA__:setstate.html
+__SEEA__:lock.html
+<h2>Name</h2>
+
+<p>lkb_getstate - get the state bits of an open lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_getstate(	lockbox_t <var>id</var>,
+			uint32_t *<var>state</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_getstate gets the state bits of the lockbox with the handle <var>id</var>.
+	<var>state</var> a pointer to the location where the state bits should be stored.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_getstate returns 0. On failure it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table summary="errors">
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with handle <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINVAL
+		</td>
+		<td valign="top">
+			<var>offset</var> is less than 0.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You do not have LKB_ACCESS_GETSTATE permission on that lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			<var>state</var> is not a valid address of a uint32_t.
+		</td>
+	</tr>
+</table>

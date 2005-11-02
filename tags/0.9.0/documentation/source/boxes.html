@@ -1,0 +1,37 @@
+__HEAD__:Accessing Lockboxes
+__SEEA__:open.html
+__SEEA__:create.html
+__SEEA__:close.html
+<p>
+	Before accessing a lockbox, a process must open a <a href="vaults.html">vault</a>.
+</p>
+<p>
+	Once the vault is open, a process may open existing lockboxes within it by
+	calling <a href="open.html">lkb_open</a>, and create new lockboxes by calling
+	<a href="create.html">lkb_create</a>. A lockbox is identified within a vault by
+	the shelf number the lockbox is on and the name of the lockbox. The lockbox name
+	is only unique within a shelf - two lockboxes on separate shelves may have the
+	same name, but are not necessarily related.
+</p>
+<p>
+	When creating a lockbox, it is possible to ask the operating system to assign it
+	a unique name, and then retrieve the name with
+	<a href="getname.html">lkb_getname</a>.
+</p>
+<p>
+	The lockbox can also be given initial <a href="data.html">data</a> and an
+	initial <a href="acls.html">access control list</a> in the call to
+	<a href="create.html">lkb_create</a>.
+</p>
+<p>
+	Once a process opens or creates a lockbox, it retains a lockbox handle to it until
+	it closes either the lockbox or the vault. The lockbox is guaranteed to continue
+	to exist at least as long as the process holds the lockbox handle. The handle can
+	be used to read data from and write data to the lockbox, to set or retrieve the
+	lockbox's file, to set or retrieve its state bits, to set or retrieve its access
+	control list, and to set its selection criteria.
+</p>
+<p>
+	When a process has finished using a lockbox, it should close the handle. When the
+	last process using a lockbox closes it, the system will destroy that lockbox.
+</p>

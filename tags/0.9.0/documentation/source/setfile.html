@@ -1,0 +1,77 @@
+__HEAD__:lkb_setfile
+__SEEA__:create.html
+__SEEA__:getfile.html
+__SEEA__:lock.html
+<h2>Name</h2>
+
+<p>lkb_setfile - set the file in an open lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_setfile(	lockbox_t <var>id</var>,
+			int <var>fd</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_setfile sets the file in a lockbox with the handle <var>id</var>. 
+	<var>fd</var> is file descriptor of the file to be places in the lockbox. If
+	<var>fd</var> is -1, any existing file is removed from the lockbox without placing
+	a new file in it.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_setfile returns 0. On failure it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table summary="errors">
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with handle <var>id</var>, or
+			<var>fd</var> is not a file descriptor of a currently open file.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You do not have LKB_ACCESS_SETFD permission on that lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EBUSY
+		</td>
+		<td valign="top">
+			Another user of the lockbox has the LKB_LOCK_FILE lock on the
+			lockbox.
+		</td>
+	</tr>
+</table>

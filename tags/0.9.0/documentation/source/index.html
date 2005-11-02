@@ -1,0 +1,38 @@
+__HEAD__:Introduction to Lockboxes
+
+<p>
+	Lockboxes are an experimental high performance inter-process communication (IPC)
+	mechanism with access control. A lockbox can be used to share data, an open file
+	handle, and state flags, with access control defining which users, groups or
+	processes may have access to those shared elements.
+</p>
+<p>
+	Lockboxes share similarities with several other IPC mechanisms, including shared
+	memory, semaphores, and UNIX domain sockets, and it it possible to implement
+	other IPC mechanisms including semaphores, mutexes, pipes, mailslots, and UNIX
+	domain pipes by using lockboxes.
+</p>
+<p>
+	Lockboxes differ from these other mechanisms in that they provide a secure, high
+	performance and failure resistant way to make data and files available to other
+	processes without knowing when those other processes might need to access that
+	data and without having to rendezvouz with that process to effect the transfer.
+</p>
+<p>
+	Each process that uses lockboxes can attach to a single named vault. A vault
+	contains numbered shelves, which can be used by co-operating applications to group
+	lockboxes containing the same or similar data structures. Each shelf contains an
+	arbitrary number of named lockboxes. Each lockbox has its own access control list
+	(ACL) and contains a block of data, a file, and a set of state bits. A process can,
+	if it has permission, set or query the data, file, ACL, and state, lock any of
+	these to temporarily prevent writes by any other process, and may use select to
+	determine if any of several conditions is true on one or more lockboxes that it has
+	open.
+</p>
+<p>
+	The Kernel portion of the Lockbox API implementation and the test programs may be
+	distributed under the GNU General Public License (GPL), version 2, or, at your
+	option, any later version.  The library portion may be distributed under the GNU
+	Lesser General Public License (LGPL), version 2.1, or, at your option, any later
+	version.
+</p>

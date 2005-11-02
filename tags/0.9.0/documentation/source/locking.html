@@ -1,0 +1,25 @@
+__HEAD__:Locking
+__SEEA__:lock.html
+__SEEA__:unlock.html
+<p>
+	A process that has a lockbox handle can obtain an exclusive lock on the lockbox by
+	calling <a href="lock.html">lkb_lock</a>, and can release its exclusive locks by
+	calling <a href="unlock.html">lkb_unlock</a>.
+</p>
+<p>
+	A process may hold exclusive locks on any combination of the data, file, state bits
+	and access control list of the lockbox. When a process holds a lock, no other
+	process may modify the portion of the lockbox that has been locked. Another process
+	that seeks to acquire the exclusive lock can call <a href="lock.html">lkb_lock</a>
+	and can choose to either block until the lock is available or to fail immediately
+	with an error if the lock is not available.
+</p>
+<p>
+	A process that has acquired a subset of the available locks on a lockbox may obtain
+	further locks by calling <a href="lock.html">lkb_lock</a> on its lockbox handle
+	again. Any newly acquired locks are added to the locks already held.
+</p>
+<p>
+	When a process calls <a href="unlock.html">lkb_unlock</a> on a lockbox handle, all
+	exclusive locks acquired on the lockbox through that handle are released.
+</p>

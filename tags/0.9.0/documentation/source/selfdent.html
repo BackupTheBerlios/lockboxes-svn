@@ -1,0 +1,90 @@
+__HEAD__:lockbox_select_fd_entry
+__SEEA__:createselectfd.html
+<h2>Name</h2>
+
+<p>
+   lockbox_select_fd_entry - - The structure of an entry in the array passed to
+   <a href="createselectfd.html">lkb_createselectfd</a>
+</p>
+
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+typedef struct
+{
+	uint32_t	lscs_criterion;
+	uint32_t	lscs_value;
+} lockbox_select_criterion_setting;
+
+typedef struct
+{
+	lockbox_t	lsfe_id;
+	size_t		lsfe_criteria;
+	lockbox_select_criterion_setting const *lsfe_settings;
+} lockbox_select_fd_entry;
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lockbox_select_fd_entry is the structure of an entry in the array passed to
+	<a href="createselectfd.html">lkb_createselectfd</a>. It has the following
+	members:
+</p>
+
+<table summary="lockbox_select_fd_entry members">
+	<tr>
+		<td valign="top">
+			<var>lsfe_id</var>
+		</td>
+		<td valign="top">
+			The lockbox handle of a lockbox opened or created by the current
+			process.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<var>lsfe_criteria</var>
+		</td>
+		<td valign="top">
+			The number of criteria to be tested on this lockbox handle.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<var>lsfe_settings</var>
+		</td>
+		<td valign="top">
+			A pointer to <var>lsfe_criteria</var>
+			lockbox_select_criterion_setting entries indicating the
+			criteria that will be tested on this lockbox.
+		</td>
+	</tr>
+</table>
+
+<p>
+	lockbox_select_criterion_setting is defined as follows:
+</p>
+
+<table summary="lockbox_select_criterion_setting members">
+	<tr>
+		<td valign="top">
+			<var>lscs_criterion</var>
+		</td>
+		<td valign="top">
+			Contains the criterion type as described for the
+			<a href="setselectcriterion.html">lkb_setselectcriterion</a> call.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<var>lscs_criterion</var>
+		</td>
+		<td valign="top">
+			Contains the criterion value as described for the
+			<a href="setselectcriterion.html">lkb_setselectcriterion</a> call.
+		</td>
+	</tr>
+</table>

@@ -1,0 +1,36 @@
+__HEAD__:Accessing the Vault
+__SEEA__:openvault.html
+__SEEA__:closevault.html
+__SEEA__:listvaults.html
+<p>
+	A process that will use lockboxes must first open a vault. A vault is the top level
+	container for lockbox data, and is used to ensure that applications that use
+	lockboxes can be sure that no other applications will inadvertently conflict in
+	their lockbox use. Each process can access only one vault at any one time -
+	before attempting to open a second vault, the process must close its existing
+	vault. Closing the vault will also close all lockbox handles open on the vault.
+</p>
+<p>
+	Vaults are given a name. The name should be unique so that other applications
+	that do not understand the purpose and use of lockboxes within a particular vault
+	will not inadvertently open the vault.  One way of achieving this to include your
+	domain name as the start of the vault name, and then using any additional
+	information necessary to distinguish between applications, and separate instances
+	of applications. For example, if instances have unique data directories
+	associated with them, a unique lockbox name might be:
+</p>
+
+<pre>
+example.com/Example Application/usr/local/example-app/data/default
+</pre>
+
+<p>
+	Vaults are opened with <a href="openvault.html">lkb_openvault</a>. When the
+	process has finished using the lockboxes in a vault, it should close the
+	vault with <a href="closevault.html">lkb_closevault</a>. Vaults are created
+	when the first process opens them and are destroyed when the last vault
+	closes them.
+</p>
+<p>	A list of active vaults can be obtained using
+	<a href="listvaults.html">lkb_listvaults</a>.
+</p>

@@ -1,0 +1,83 @@
+__HEAD__:lkb_getname
+__SEEA__:create.html
+<h2>Name</h2>
+
+<p>lkb_getname - get the name of an open lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_getname(	lockbox_t <var>id</var>,
+			char *<var>name</var>,
+			size_t <var>bufsize</var>,
+			size_t *<var>sizeneeded</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_getname retrieves the name of the lockbox with the handle <var>id</var>.
+	<var>name</var> is a buffer to hold the name of the lockbox, and
+	<var>bufsize</var> is the size of the buffer. The call stores the number of bytes
+	used to hold the name in the value pointed to by <var>sizeneeded</var>.
+</p>
+<p>
+	If <var>bufsize</var> is not large enough to store the name, lkb_getname stores the
+	number of bytes needed in the value pointed to by <var>sizeneeded</var>, returns
+	-1, and sets <u>errno</u> to ENOMEM.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_getname returns 0. On failure, it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table summary="errors">
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with handle <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			<var>bufsize</var> is large enough to hold the name, but
+			<var>name</var> is not a pointer to a buffer large enough to
+			hold it.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOMEM
+		</td>
+		<td valign="top">
+			<var>bufsize</var> is not large enough to hold the name.
+		</td>
+	</tr>
+		
+</table>

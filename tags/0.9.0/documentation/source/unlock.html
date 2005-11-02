@@ -1,0 +1,54 @@
+__HEAD__:lkb_unlock
+__SEEA__:lock.html
+<h2>Name</h2>
+
+<p>lkb_unlock - release a prior lock obtained on a lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_unlock(	lockbox_t <var>id</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_unlock releases a lock previously obtained on a lockbox using
+	<a href="lock.html">lkb_lock</a>.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_unlock returns 0. On failure, it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table summary="errors">
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with the handle <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+</table>

@@ -1,0 +1,20 @@
+__HEAD__:Accessing Files
+__SEEA__:setfile.html
+__SEEA__:getfile.html
+<p>
+	A process that has a lockbox handle can use it to set the file in the lockbox by
+	calling <a href="setfile.html">lkb_setfile</a> and retrieve the file from the
+	lockbox by calling <a href="getfile.html">lkb_getfile</a>.
+</p>
+<p>
+	A process can deposit a file in a lockbox by providing any open file descriptor
+	to it with <a href="setfile.html">lkb_setfile</a>. When a process retrieves the
+	file from the lockbox with <a href="getfile.html">lkb_getfile</a>, it receives
+	a new file descriptor to the open file and can access that file as if it had opened
+	the file itself. When it has finished using the file, it should close the file
+	by calling <u>close(2)</u>.
+</p>
+<p>
+	The file can be removed from the lockbox by calling
+	<a href="setfile.html">lkb_setfile</a> with a file descriptor "-1".
+</p>

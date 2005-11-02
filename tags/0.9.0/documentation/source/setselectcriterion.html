@@ -1,0 +1,122 @@
+__HEAD__:lkb_setselectcriterion
+__SEEA__:getselectableboxes.html
+__SEEA__:resetallselects.html
+__SEEA__:createselectfd.html
+<h2>Name</h2>
+
+<p>lkb_setselectcriterion - get the state bits of an open lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_setselectcriterion(	lockbox_t <var>id</var>,
+				uint32_t <var>type</var>,
+				uint32_t <var>value</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_setselectcriterion sets a condition that will cause a subsequent select(2) on
+	the file descriptor returned by <a href="openvault.html">lkb_openvault</a> to
+	indicate that the file descriptor has an exceptional condition. <var>id</var> is
+	the handle of the lockbox to which the condition applies. <var>type</var> is the
+	type of condition to test. <var>value</var> is the trigger value.
+</p>
+
+<p>
+	When a lockbox is first opened or created, there are no active trigger conditions
+	on its handle.
+</p>
+
+<p>
+	<var>type</var> is chosen from the list below.
+</p>
+
+<table summary="criterion types">
+	<tr>
+		<th>Criterion type</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td valign="top">
+			LKB_SELECT_USERS_LESS_THAN
+		</td>
+		<td valign="top">
+			Tests if the number of users of the lockbox is less than the
+			<var>value</var>. If <var>value</var> is
+			LKB_SELECT_DISABLE_USERS_LT, this criterion is not tested on this
+			handle.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			LKB_SELECT_USERS_GREATER_THAN
+		</td>
+		<td valign="top">
+			Tests if the number of users of the lockbox is greater than the
+			<var>value</var>. If <var>value</var> is
+			LKB_SELECT_DISABLE_USERS_GT, this criterion is not tested on this
+			handle.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			LKB_SELECT_FLAGS
+		</td>
+		<td valign="top">
+			Tests if any of the state bits set by
+			<a href="setstate.html">lkb_setstate</a> have been set. The
+			<var>value</var> indicates the set of bits that will cause the
+			criterion to be satisfied. If the value is zero, this criterion is
+			not tested on this handle.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			LKB_SELECT_LOCKAVAIL
+		</td>
+		<td valign="top">
+			Tests if a call to <a href="lock.html">lkb_lock</a> with the
+			LKB_LOCK_NOBLOCK flag would succeed. <var>value</var> is the set of
+			locks that should be tested. If the value is zero, this criterion
+			is not tested on this handle.
+		</td>
+	</tr>
+</table>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_setselectcriterion returns 0. On failure it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table summary="errors">
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with handle <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+</table>

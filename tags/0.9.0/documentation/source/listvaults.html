@@ -1,0 +1,93 @@
+__HEAD__:lkb_listvaults
+__SEEA__:openvault.html
+__SEEA__:listboxes.html
+<h2>Name</h2>
+
+<p>lkb_listvaults - list all vaults currently open on the system</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_listvaults(	char const *<var>data</var>,
+			size_t <var>bufsize</var>,
+			size_t *<var>sizeneeded</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_listvaults lists all vaults currently open on the system. <var>data</var> is a
+	buffer to hold the names of the vaults, and <var>bufsize</var> is the size of the
+	buffer. The call stores the number of bytes used to hold the names in the value
+	pointed to by <var>sizeneeded</var>.
+</p>
+<p>
+	The names are stored in the buffer pointed to by <var>data</var> as a series of
+	strings. Each string begins after the terminating NUL byte of the previous string.
+	An empty string appears after the last string in the buffer.
+</p>
+<p>
+	If <var>bufsize</var> is not large enough to store the list of names,
+	lkb_listvaults stores the number of bytes needed in the value pointed to by
+	<var>sizeneeded</var>, returns -1, and sets <u>errno</u> to ENOMEM.
+</p>
+<p>
+	It is not necessary to have a vault open in order to use lkb_listvaults, but if
+	one is open it must not be closed by another thread while lkb_listvaults is
+	being used.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_listvaults returns 0. On failure, it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table summary="errors">
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			The lockbox module is not installed.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You are not authorised to use lockboxes.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			<var>bufsize</var> is large enough to hold the name list, but
+			<var>data</var> is not a pointer to a buffer large enough to
+			hold it.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOMEM
+		</td>
+		<td valign="top">
+			<var>bufsize</var> is not large enough to hold the name list.
+		</td>
+	</tr>
+		
+</table>

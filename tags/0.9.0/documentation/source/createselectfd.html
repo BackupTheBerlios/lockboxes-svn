@@ -1,0 +1,82 @@
+__HEAD__:lkb_createselectfd
+__SEEA__:getselectableboxes.html
+__SEEA__:resetallselects.html
+__SEEA__:setselectcriterion.html
+__SEEA__:selfdent.html
+<h2>Name</h2>
+
+<p>lkb_createselectfd - create a file descriptor that can be used to test for a specific set of trigger conditions</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_createselectfd(	lockbox_select_fd_entry const *<var>entries</var>,
+			size_t <var>count</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_createselectfd creates a new file descriptor that has a list of lockboxes and
+	conditions that will cause the new file descriptor to satisfy the exceptional
+	conditions test of select(2). It is used for multi-threaded applications where
+	more than one thread may need to test lockbox conditions with select(2), with
+	different sets of conditions.
+</p>
+
+<p>
+	<var>entries</var> is an array of <var>count</var> lockbox_select_fd_entry
+	structures, each of which contains a lockbox handle and a list of criteria to be
+	tested. The use of this call will increase the user count for each lockbox with a
+	handle in the array. The user count will drop when the file descriptor created by
+	this call is closed.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_createselectfd returns the new file descriptor. On failure it
+	returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table summary="errors">
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			One of the lockboxes handles indicated by the <var>entries</var>
+			array is not a handle of a currently open lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			the <var>entries</var> array is not a valid pointer to
+			<var>count</var> elements, or one of the lists of criteria pointed
+			to in that array is not a valid pointer to the indicated number of
+			criteria.
+		</td>
+	</tr>
+</table>

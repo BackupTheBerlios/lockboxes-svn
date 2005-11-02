@@ -1,0 +1,12 @@
+__HEAD__:Installing the Lockbox API
+
+<p>
+	The lockbox API requires version 2.6 of the Linux kernel. You will need to have
+	this installed together with the kernel headers.
+</p>
+<ol>
+	<li>Build the kernel module and library as a mortal user: <tt>make</tt></li>
+	<li>Install as root: <tt>sudo make install</tt></li>
+	<li>Install the module into the running kernel: <tt>sudo modprobe lockbox</tt></li>
+	<li>Make sure "lockbox" appears in /etc/modules.</li>
+</ol>

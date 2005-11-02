@@ -1,0 +1,46 @@
+#!/bin/sh
+
+[ -d source ] || {
+	echo "Please run this in the lockbox/documentation directory"
+	exit 1
+}
+
+unset CDPATH
+for i in `(cd const; echo *)`
+do
+	cp const/$i output
+done
+
+for i in `(cd source; echo *)`
+do
+	HEAD="`sed -e '/^__HEAD__:/!d' -e 's/^__HEAD__://' < source/$i`"
+	sed -e "s/__HEAD__/$HEAD/" < parts/top > output/$i
+	grep '^__BACK__:' source/$i > /dev/null && {
+		echo '    <p class="backlink">Back To:' >> output/$i
+		n=`grep -c '^__BACK__:' source/$i`
+		l=1
+		eol=","
+		for j in `sed -e '/^__BACK__:/!d' -e 's/^__BACK__://' < source/$i`
+		do
+			[ $l = $n ] && eol=""
+			echo "    <a href=\"$j\">`sed -e '/^__HEAD__:/!d' -e 's/^__HEAD__://' -e 's/.*: //' < source/$j`</a>$eol" >> output/$i
+			l="`expr $l + 1`"
+		done
+		echo "    </p>" >> output/$i
+	}
+	sed -e "/^__....__:/d" source/$i >> output/$i
+	grep '^__SEEA__:' source/$i > /dev/null && {
+		echo '    <h2>See Also</h2><p>' >> output/$i
+		n=`grep -c '^__SEEA__:' source/$i`
+		l=1
+		eol="<br />"
+		for j in `sed -e '/^__SEEA__:/!d' -e 's/^__SEEA__://' < source/$i`
+		do
+			[ $l = $n ] && eol=""
+			echo "    <a href=\"$j\">`(sed -e '/^__HEAD__:/!d' -e 's/^__HEAD__://' < source/$j) 2>&1`</a>$eol" >> output/$i
+			l="`expr $l + 1`"
+		done
+		echo "    </p>" >> output/$i
+	}
+	cat parts/bottom >> output/$i
+done

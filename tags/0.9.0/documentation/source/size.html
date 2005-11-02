@@ -1,0 +1,65 @@
+__HEAD__:lkb_size
+__SEEA__:create.html
+__SEEA__:setdata.html
+__SEEA__:getdata.html
+<h2>Name</h2>
+
+<p>lkb_size - get the size of an open lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_size(lockbox_t <var>id</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_size retrieves the size in bytes of the data stored in the lockbox with the
+	handle <var>id</var>.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_size returns 0. On failure, it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table summary="errors">
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with handle <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You do not have LKB_ACCESS_READ permission on that lockbox.
+		</td>
+	</tr>
+		
+</table>
