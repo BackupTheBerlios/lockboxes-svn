@@ -6,3 +6,4 @@ install:
 	install -m 644 output/* /usr/local/share/doc/lockbox
 
 clean:
+	rm -f output/*
