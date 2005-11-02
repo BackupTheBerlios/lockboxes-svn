@@ -3,7 +3,14 @@ include ../Makefile.conf
 INCLUDES=../include/lockbox.h
 LIBS=../lib/liblockbox.a
 DEPS=$(INCLUDES) $(LIBS)
-LIBARGS=-L../lib -llockbox
+PLATFORM=$(shell uname -m)
+
+ifeq "$(PLATFORM)" "x86_64"
+ARCH=64
+else
+ARCH=
+endif
+LIBARGS=-L../lib -llockbox$(ARCH)
 TARGETS=createbox holdvault listboxes listvaults lkbtests
 
 default: $(TARGETS)
