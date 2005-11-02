@@ -1,0 +1,64 @@
+__HEAD__:lkb_users
+__SEEA__:create.html
+__SEEA__:open.html
+__SEEA__:close.html
+__SEEA__:createselectfd.html
+<h2>Name</h2>
+
+<p>lkb_users - get the number of users of an open lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_users(lockbox_t <var>id</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_users retrieves the number of users of the lockbox with the handle
+	<var>id</var>. Each lockbox handle on the lockbox - whether created by
+	<a href="create.html">lkb_create</a> or <a href="open.html">lkb_open</a>, counts as
+	a user of the lockbox. Where a single process opens the file more than once, each
+	handle obtained counts as a separate user of the lockbox. In addition, any use of
+	the lockbox in a file descriptor created by
+	<a href="createselectfd.html">lkb_createselectfd</a> counts as a user of the
+	lockbox.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_users returns the number of users of the lockbox. On failure, it
+	returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table>
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with handle <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+</table>

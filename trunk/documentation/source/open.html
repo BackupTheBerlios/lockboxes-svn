@@ -1,0 +1,84 @@
+__HEAD__:lkb_open
+__SEEA__:openvault.html
+__SEEA__:create.html
+__SEEA__:close.html
+<h2>Name</h2>
+
+<p>lkb_open - open a lockbox on a shelf in the current vault</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+lockbox_t lkb_open(	int <var>shelf</var>,
+			char const *<var>name</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_open opens a lockbox on the specified <var>shelf</var> in the current
+	vault. <var>name</var> is the name of the lockbox to open. The lockbox must
+	already exist.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_open returns a lockbox handle. On failure, it returns
+	LOCKBOX_ERROR.
+</p>
+
+<h2>Errors</h2>
+
+<table>
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINVAL
+		</td>
+		<td valign="top">
+			<var>name</var> is an empty string.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox with that <var>name</var> on the
+			<var>shelf</var>.
+		</td>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			<var>name</var> does not point to a valid address
+			of a string.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You do not have LKB_ACCESS_OPEN on that lockbox.
+		</td>
+	</tr>
+</table>

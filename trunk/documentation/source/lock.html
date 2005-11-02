@@ -1,0 +1,152 @@
+__HEAD__:lkb_lock
+__SEEA__:open.html
+__SEEA__:create.html
+__SEEA__:unlock.html
+__SEEA__:setdata.html
+__SEEA__:setfile.html
+__SEEA__:setstate.html
+__SEEA__:setacl.html
+<h2>Name</h2>
+
+<p>lkb_lock - lock a lockbox to prevent changes</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_lock(	lockbox_t <var>id</var>,
+		uint32_t <var>flags</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_lock locks a lockbox to prevent changes to some combination of the data,
+	the file, the state and the access control list. <var>id</var> is the handle
+	to the lockbox. <var>flags</var> is a combination of the following flags:
+</p>
+
+<table border="0">
+	<tr>
+		<td valign="top">
+			LKB_LOCK_DATA
+		</td>
+		<td valign="top">
+			Lock the data - prevents other users of the lockbox from
+			calling <a href="setdata.html">lkb_setdata</a> on the lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			LKB_LOCK_FILE
+		</td>
+		<td valign="top">
+			Lock the file - prevents other users of the lockbox from
+			calling <a href="setfile.html">lkb_setfile</a> on the lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			LKB_LOCK_STATE
+		</td>
+		<td valign="top">
+			Lock the state - prevents other users of the lockbox from calling
+			<a href="setstate.html">lkb_setstate</a> on the lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			LKB_LOCK_ACL
+		</td>
+		<td valign="top">
+			Lock the access control list - prevents other users of the lockbox
+			from calling <a href="setacl.html">lkb_setacl</a> on the lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			LKB_LOCK_ALL
+		</td>
+		<td valign="top">
+			Applies all of these locks.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			LKB_LOCK_NOBLOCK
+		</td>
+		<td valign="top">
+			Do not wait until the lock can be acquired. If the lock is not
+			available immediately, lkb_lock will return with failure.
+		</td>
+	</tr>
+</table>
+
+<p>
+	Applications should ensure that they do not hold locks on a lockbox any longer than
+	is necessary - holding a lock for a long time increases the chances of another user
+	of the lockbox blocking while attempting to obtain the lock.
+</p>
+<p>
+	A preferred approach is to avoid requiring locks altogether. Each operation on a
+	lockbox is guaranteed to obtain consistent data. A single call to
+	<a href="getdata.html">lkb_getdata</a> has no risk of receiving data that has
+	been only partially written by a call to <a href="setdata.html">lkb_setdata</a>
+	by another user of the lockbox. Thus readers that only need read access to one
+	attribute of the lockbox need not lock the box at all. Writers only need to lock
+	the box if either they write multiple attributes of the lockbox or if they need
+	to know the contents of the lockbox immediately prior to the change they are
+	making.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_lock returns 0. On failure, it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table>
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with the handle <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You do not have LKB_ACCESS_LOCK on that lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EWOULDBLOCK
+		</td>
+		<td valign="top">
+			LKB_LOCK_NOBLOCK was specified, but another user of the lockbox
+			currently has one of the requested locks.
+		</td>
+	</tr>
+</table>

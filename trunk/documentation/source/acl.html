@@ -1,0 +1,112 @@
+__HEAD__:lockbox_acl
+__SEEA__:create.html
+__SEEA__:setacl.html
+__SEEA__:getacl.html
+<h2>Name</h2>
+
+<p>lockbox_acl - the structure of a lockbox access control list</p>
+
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+typedef struct
+{
+	uint32_t		lae_idtype;
+	uint32_t		lae_id;
+	uint32_t		lae_access;
+	uint32_t		lae_reserved;
+} lockbox_acl_entry;
+
+typedef struct
+{
+	uint32_t		lah_version;
+	uint32_t		lah_n_entries;
+} lockbox_acl_header;
+
+typedef struct
+{
+	lockbox_acl_header	la_header;
+	lockbox_acl_entry	la_entries[1];
+} lockbox_acl;
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lockbox_acl is the structure that describes a complete access control list. It contains two
+	elements: a header (la_header); and an array of entries (la_entries). The header contains a
+	version number (la_header.lah_version), and the number of entries in the entries array
+	(la_header.lah_n_entries). When creating an access control list, an application should set
+	la_header.lah_version to LKB_ACL_VERSION.
+</p>
+<p>
+	Each entry in the la_entries array contains a permission that has been granted. When attempting
+	an operation on a lockbox, the system searches through the list for the first entry that grants
+	the requested permission in the current context. Each entry is a lockbox_acl_entry structure,
+	and contains the following members:
+</p>
+<table>
+	<tr>
+		<td valign="top">
+			lae_idtype
+		</td>
+		<td valign="top">
+			Specifies the type of entry. This can be one of:
+			<ul>
+			<li>LKB_IDTYPE_USER - grants the permission to the specified user ID.</li>
+			<li>LKB_IDTYPE_GROUP - grants the permission to the specified user ID.</li>
+			<li>LKB_IDTYPE_WORLD - grants the permission to everybody.</li>
+			<li>LKB_IDTYPE_PROCESS - grants the permission to the specified process ID.</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			lae_id
+		</td>
+		<td valign="top">
+			Specified the user, group or process ID that is being granted permission.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			lae_access
+		</td>
+		<td valign="top">
+			Specifies the permissions granted. The following permissions exist:
+			<ul>
+			<li>LKB_ACCESS_READ - permission to call
+			    <a href="getdata.html">lkb_getdata</a> and
+			    <a href="size.html">lkb_size</a> on the lockbox.</li>
+			<li>LKB_ACCESS_WRITE - permission to call
+			    <a href="setdata.html">lkb_setdata</a> on the lockbox.</li>
+			<li>LKB_ACCESS_LOCK - permission to call
+			    <a href="lock.html">lkb_lock</a> on the lockbox.</li>
+			<li>LKB_ACCESS_GETFD - permission to call
+			    <a href="getfile.html">lkb_getfile</a> on the lockbox.</li>
+			<li>LKB_ACCESS_SETFD - permission to call
+			    <a href="setfile.html">lkb_setfile</a> on the lockbox.</li>
+			<li>LKB_ACCESS_GETSTATE - permission to call
+			    <a href="getstate.html">lkb_getstate</a> on the lockbox.</li>
+			<li>LKB_ACCESS_SETSTATE - permission to call
+			    <a href="setstate.html">lkb_setstate</a> on the lockbox.</li>
+			<li>LKB_ACCESS_GETACL - permission to call
+			    <a href="getacl.html">lkb_getacl</a> on the lockbox.</li>
+			<li>LKB_ACCESS_SETACL - permission to call
+			    <a href="setacl.html">lkb_setacl</a> on the lockbox.</li>
+			<li>LKB_ACCESS_OPEN - permission to call
+			    <a href="open.html">lkb_open</a> on the lockbox.</li>
+			<li>LKB_ACCESS_ALL - combines all of the above permissions.</li>
+			</ul>
+		</td>
+	</tr>
+</table>
+<h2>Notes</h2>
+<p>
+	Although it is possible to control access to call
+	<a href="getstate.html">lkb_getstate</a> for a lockbox, a process could obtain
+	the same information via a series of calls to <u>select(2)</u> with appropriate
+	selection criteria on the lockbox handle.
+</p>

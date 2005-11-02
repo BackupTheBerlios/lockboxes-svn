@@ -1,0 +1,49 @@
+__HEAD__:lkb_resetallselects
+__SEEA__:setselectcriterion.html
+__SEEA__:getselectableboxes.html
+<h2>Name</h2>
+
+<p>lkb_resetallselects - cancel all trigger conditions on all open lockboxes</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_resetallselects(void);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_resetallselects cancels all trigger conditions on all open lockboxes. A
+	subsequent select(2) on the file descriptor returned by
+	<a href="openvault.html">lkb_openvault</a> will never indicate that the file
+	descriptor has an exceptional condition.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_resetallselects returns 0. On failure it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table>
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+</table>

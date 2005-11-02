@@ -1,0 +1,149 @@
+__HEAD__:Lockbox Concepts
+
+<h2>The lockbox organisational heirarchy</h2>
+<p>
+	Lockboxes are organised into a heirarchy that aims to facilitate organisation of
+	the data in the lockboxes. At the top level of the heirarchy are named vaults.
+	Each vault contains numbered shelves. Each shelf contains named lockboxes. Each
+	lockbox can contain some data, a file, and some state bits.
+</p>
+
+<h2>Vaults</h2>
+<p>
+	Before an application can use lockboxes it must open a vault. An application can
+	only have one vault open at a time. By using an appropriate name for a vault,
+	applications using the vault can ensure that their use of lockboxes will not
+	conflict with the use of lockboxes by applications using another vault.
+</p>
+<p>
+	Vaults are created automatically when the first process opens a vault of that
+	name and are destroyed automatically when the last process closes it.
+</p>
+
+<h2>Shelves</h2>
+<p>
+	Within each vault there are numbered shelves. When a vault is initially created,
+	it will have some fixed number of shelves already in it. When an application
+	creates a lockbox on a shelf that does not already exist, that shelf is created,
+	as are any lower numbered shelves that have not yet been created, and in most
+	cases a small number of higher numbered shelves.
+</p>
+<p>
+	Shelf numbers are numbered starting at zero, and lower numbered shelves are more
+	efficient to access than higher numbered shelves.
+</p>
+<p>
+	An application that stores multiple data structures in lockboxes might store the
+	lockboxes in shelves that reflect the type of data in the lockbox. Alternatively,
+	each process using a vault might be assigned a shelf, with lockboxes in shelf 0
+	being used to manage the assignment of processes to a shelf, and processes only
+	permitted to create lockboxes in their own shelf. The use of shelves is a matter
+	for the application design, but should reflect the fact that lower numbered
+	shelves are quicker to access than higher numbered shelves.
+</p>
+
+<h2>Lockboxes</h2>
+<p>
+	The lockbox is the basic organisational structure in the lockbox API. Each
+	lockbox is on a shelf, and is given a name that is unique on that shelf in the
+	vault. The choice of name is a matter for the application design. Locking and
+	access control in the API is applied at the lockbox level.
+</p>
+<p>
+	When a lockbox is opened or created, the process gets a lockbox handle (also known
+	as a lockbox ID). The process retains this handle for as long as it needs
+	access to the lockbox. When all handles on a lockbox have been closed, the system
+	automatically deletes the lockbox.
+</p>
+<p>
+	Each lockbox can contain one or more of: data; a file; and state bits.
+</p>
+
+<h3>Data</h3>
+<p>
+	Lockboxes can contain data. Processes with a handle to the lockbox can, if they
+	have appropriate permission, set or retrieve data stored in the lockbox. Reads and
+	writes to the data are atomic - a process reading data from a lockbox in a
+	single read operation is guaranteed to receive data that is in a consistent state.
+	A process that is writing data to a lockbox in a single operation will never cause
+	the lockbox to contain data in the region being written that is a mixture of old
+	data and new data.
+</p>
+<p>
+	The amount of data in a lockbox can be expanded at any time by setting data at a
+	location past the current end of the data in that lockbox. It is thus possible for
+	a lockbox to expand to contain more data than was initially stored in it. Once
+	expanded, however, the lockbox cannot be contracted. The memory allocated for the
+	data can only be freed if all processes using that lockbox close their handles to
+	it, thus causing the system to release it.
+</p>
+
+<h3>Files</h3>
+<p>
+	Each lockbox may contain one open file. A process with appropriate permission can
+	store a file descriptor in the lockbox, allowing any other process that opens the
+	lockbox and has appropriate permission to obtain a file descriptor to the same open
+	file. The open file can be removed from the lockbox by any process with appropriate
+	permission on the lockbox.
+</p>
+
+<h3>State Bits</h3>
+<p>
+	Each lockbox contains a set of state bits. Processes with appropriate permission
+	can set or read the entire set of state bits. Additionally, processes can use
+	select to determine when particular state bits have been set. Thus state bits
+	can be used to trigger synchronization between processes.
+</p>
+
+<h2>Access Control</h2>
+<p>
+	Each lockbox has an access control list that can restrict who can open or lock
+	a lockbox, and who can read or write any of the contents of the lockbox or the
+	access control list itself. Access can be granted to process IDs, user IDs,
+	group IDs, or to all users.
+</p>
+
+<h2>Locking</h2>
+<p>
+	A process using a lockbox may obtain a locks on any of the data, files, state bits
+	and access control list. Only one process can have each type of lock at any one
+	time, and the lock will cause any attempt by another process to modify the
+	corresponding data element to fail.
+</p>
+<p>
+	Because lockbox operations are guaranteed to be atomic, a process should only
+	acquire lock if:
+</p>
+<ol>
+	<li>It needs to read or write more than one of the content types in the lockbox
+	    while ensuring the two or more content types are in a consistent state for the
+	    two or more operations; or
+	</li>
+	<li>It needs to write a component with a value that depends on the immediate prior
+	    contents of that component.
+	</li>
+</ol>
+
+<h2>Synchronization</h2>
+
+<p>
+	When an application opens a vault it obtains a file descriptor that can be used
+	in calls to select to test whether a range of conditions are true. The application
+	first uses the lockbox API to attach conditions to a lockbox handle. Once all the
+	conditions are set, a call to select will report the file descriptor to have an
+	exceptional condition when any of the conditions is true.
+</p>
+<p>
+	The conditions that can be tested in this way are:
+</p>
+<ol>
+	<li>Test for particular state bits on a lockbox being set;</li>
+	<li>Test for the number of users of the lockbox dropping below a number;</li>
+	<li>Test for the number of users of the lockbox exceeding a number; and</li>
+	<li>Test for the availability of one or more types of lock on the lockbox.</li>
+</ol>
+<p>
+	A multi-threaded application can create additional file descriptors that can be
+	used to test their own set of conditions independently of the conditions
+	affecting the original file descriptor.
+</p>

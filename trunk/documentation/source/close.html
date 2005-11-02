@@ -1,0 +1,57 @@
+__HEAD__:lkb_close
+__SEEA__:openvault.html
+__SEEA__:create.html
+__SEEA__:open.html
+<h2>Name</h2>
+
+<p>lkb_close - close a lockbox.</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_close(lockbox_t id);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_close closes a lockbox previously opened with
+	<a href="create.html">lkb_create</a> or <a href="open.html">lkb_open</a>.
+	<var>id</var> is the lockbox handle.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_open returns 0. On failure, it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table>
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open on the handle indicated by <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+</table>

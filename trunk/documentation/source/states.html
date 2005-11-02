@@ -1,0 +1,14 @@
+__HEAD__:Accessing State Bits
+__SEEA__:setstate.html
+__SEEA__:getstate.html
+<p>
+	A process that has a lockbox handle can use it to set the state bits on the
+	lockbox by calling <a href="setstate.html">lkb_setstate</a> and retrieve the
+	state bits from the lockbox by calling <a href="getstate.html">lkb_getstate</a>.
+</p>
+<p>
+	The state bits are a 32 bit integer. The advantage they have over ordinary
+	<a href="data.html">data</a> in a lockbox is that state bits can be tested
+	using <u>select(2)</u> by setting appropriate selection criteria on the
+	lockbox handle.
+</p>

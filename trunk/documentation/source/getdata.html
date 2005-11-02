@@ -1,0 +1,87 @@
+__HEAD__:lkb_getdata
+__SEEA__:create.html
+__SEEA__:setdata.html
+__SEEA__:size.html
+<h2>Name</h2>
+
+<p>lkb_getdata - get data from an open lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_getdata(lockbox_t <var>id</var>,
+		void *<var>buffer</var>,
+		size_t <var>bufsize</var>,
+		off_t <var>offset</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_getdata retrieves data from the lockbox with the handle <var>id</var>.
+	<var>buffer</var> is a pointer to the buffer that will hold the data.
+	<var>bufsize</var> is the number of bytes to read. <var>offset</var> is the offset
+	from the start of the lockbox's data of the first byte to be returned.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_getdata returns the number of bytes read, which may be less than
+	<var>bufsize</var>. On failure, it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table>
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with handle <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINVAL
+		</td>
+		<td valign="top">
+			<var>offset</var> is less than 0.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You do not have LKB_ACCESS_READ permission on that lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			<var>buffer</var> is not the valid address of a buffer large enough
+			to hold the data that would be returned.
+		</td>
+	</tr>
+</table>

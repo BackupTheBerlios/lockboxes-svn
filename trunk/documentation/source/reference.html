@@ -1,0 +1,226 @@
+__HEAD__:lockbox API reference
+
+<table border="0">
+	<tr>
+		<th colspan="2">
+			Functions
+		</th>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="close.html">lkb_close</a>
+		</td>
+		<td valign="top">
+			- Close a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="closevault.html">lkb_closevault</a>
+		</td>
+		<td valign="top">
+			- Close the current vault
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="create.html">lkb_create</a>
+		</td>
+		<td valign="top">
+			- Create a lockbox on a shelf
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="createselectfd.html">lkb_createselectfd</a>
+		</td>
+		<td valign="top">
+			- Create a file descriptor to be used in select on a
+			specific list of lockboxes with a specific list of criteria
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="getacl.html">lkb_getacl</a>
+		</td>
+		<td valign="top">
+			- Get the access control list of a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="getdata.html">lkb_getdata</a>
+		</td>
+		<td valign="top">
+			- Get data from a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="getfile.html">lkb_getfile</a>
+		</td>
+		<td valign="top">
+			- Get the file from a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="getname.html">lkb_getname</a>
+		</td>
+		<td valign="top">
+			- Get the name of a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="getselectableboxes.html">lkb_getselectableboxes</a>
+		</td>
+		<td valign="top">
+			- Get a list of the lockboxes that would cause a select
+			on the vault to return immediately.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="getstate.html">lkb_getstate</a>
+		</td>
+		<td valign="top">
+			- Get state bits from a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="getusers.html">lkb_getusers</a>
+		</td>
+		<td valign="top">
+			- Get the number of users of a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="listboxes.html">lkb_listboxes</a>
+		</td>
+		<td valign="top">
+			- List all lockboxes on a shelf
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="listvaults.html">lkb_listvaults</a>
+		</td>
+		<td valign="top">
+			- List all vaults in the system
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="lock.html">lkb_lock</a>
+		</td>
+		<td valign="top">
+			- Lock a lockbox, preventing attempts by other users of
+			that box from changing it
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="open.html">lkb_open</a>
+		</td>
+		<td valign="top">
+			- Open a lockbox on a shelf
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="openvault.html">lkb_openvault</a>
+		</td>
+		<td valign="top">
+			- Open a vault
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="resetallselects.html">lkb_resetallselects</a>
+		</td>
+		<td valign="top">
+			- Reset all select criteria in a vault
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="setacl.html">lkb_setacl</a>
+		</td>
+		<td valign="top">
+			- Set the access control list of a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="setdata.html">lkb_setdata</a>
+		</td>
+		<td valign="top">
+			- Set data in a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="setfile.html">lkb_setfile</a>
+		</td>
+		<td valign="top">
+			- Set the file in a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="setselectcriterion.html">lkb_setselectcriterion</a>
+		</td>
+		<td valign="top">
+			- Set the value of a select criterion for a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="setstate.html">lkb_setstate</a>
+		</td>
+		<td valign="top">
+			- Set state bits on a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="size.html">lkb_size</a>
+		</td>
+		<td valign="top">
+			- Get the size of a lockbox
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="unlock.html">lkb_unlock</a>
+		</td>
+		<td valign="top">
+			- Release of lock on a lockbox
+		</td>
+	</tr>
+	<tr>
+		<th colspan="2">
+			Structures
+		</th>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="acl.html">lockbox_acl</a>
+		</td>
+		<td valign="top">
+			- The structure of a lockbox access control list.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<a href="selfdent.html">lockbox_select_fd_entry</a>
+		</td>
+		<td valign="top">
+			- The structure of an entry in the array passed to
+			<a href="createselectfd.html">lkb_createselectfd</a>
+		</td>
+	</tr>
+</table>

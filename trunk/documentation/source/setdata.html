@@ -1,0 +1,103 @@
+__HEAD__:lkb_setdata
+__SEEA__:create.html
+__SEEA__:getdata.html
+__SEEA__:lock.html
+<h2>Name</h2>
+
+<p>lkb_setdata - set data in an open lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_setdata(lockbox_t <var>id</var>,
+		void const *<var>buffer</var>,
+		size_t <var>bufsize</var>,
+		off_t <var>offset</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_setdata sets data in the lockbox with the handle <var>id</var>.
+	<var>buffer</var> is a pointer to the buffer that holds the data to be set.
+	<var>bufsize</var> is the number of bytes to set. <var>offset</var> is the offset
+	from the start of the lockbox's data of the first byte to be set.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_setdata returns the number of bytes set. On failure it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table>
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with handle <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINVAL
+		</td>
+		<td valign="top">
+			<var>offset</var> is less than 0.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You do not have LKB_ACCESS_WRITE permission on that lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EBUSY
+		</td>
+		<td valign="top">
+			Another user of the lockbox has the LKB_LOCK_DATA lock on the
+			lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			<var>buffer</var> is not the valid address of a buffer of
+			<var>bufsize</var> bytes.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOMEM
+		</td>
+		<td valign="top">
+			The system ran out of memory.
+		</td>
+	</tr>
+</table>

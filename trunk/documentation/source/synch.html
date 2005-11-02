@@ -1,0 +1,37 @@
+__HEAD__:Synchronisation
+__SEEA__:setselectcriterion.html
+__SEEA__:getselectableboxes.html
+__SEEA__:resetallselects.html
+__SEEA__:createselectfd.html
+<p>
+	A process that has open lockboxes can set select criteria on its lockbox handles
+	and then use the file descriptor returned by
+	<a href="openvault.html">lkb_openvault</a> in a call to <u>select(2)</u>
+	or to <u>poll(2)</u> to test if any of the criteria set on any of its lockboxes is
+	met. It may also create a new file descriptor having a subset of its open lockbox
+	together with select criteria on that subset.
+</p>
+<p>
+	A single-threaded process will normally use
+	<a href="resetallselects.html">lkb_resetallselects</a> to reset all select
+	criteria, then make a series of calls to
+	<a href="setselectcriterion.html">lkb_selectselectcriterion</a> to define the
+	conditions that it is interested in, followed by a call to <u>select(2)</u> or
+	<u>poll(2)</u> to wait for one of those conditions to be met. It may then call
+	<a href="getselectableboxes.html">lkb_getselectableboxes.html</a> to identify
+	which lockbox handles are ready.
+</p>
+<p>
+	A multi-threaded process will instead use
+	<a href="createselectfd.html">lkb_createselectfd</a> to create new file
+	descriptors with handles to subsets of the lockboxes it has open and distinct
+	sets of select criteria. The threads will still use its original lockbox handle to
+	access the lockbox, but will use file descriptors created by this mechanism in
+	calls to <u>select(2)</u> and <u>poll(2)</u>. By using this scheme each thread can
+	call select on its own file descriptor using its own set of criteria.
+</p>
+<p>
+	A process may set select criteria that test for the number of users of a lockbox
+	being greater than or less than some number, for state bits being set, or for
+	exclusive locks being available.
+</p>

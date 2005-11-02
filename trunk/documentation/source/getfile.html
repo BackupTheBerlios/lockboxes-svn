@@ -1,0 +1,65 @@
+__HEAD__:lkb_getfile
+__SEEA__:create.html
+__SEEA__:setfile.html
+__SEEA__:lock.html
+<h2>Name</h2>
+
+<p>lkb_getfile - get the file from an open lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_getfile(lockbox_t <var>id</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_getfile gets the file from the lockbox with the handle <var>id</var>.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_getfile returns a file descriptor for the file. On failure it
+	returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table>
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with handle <var>id</var>, or the lockbox
+			does not have a file.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You do not have LKB_ACCESS_GETFD permission on that lockbox.
+		</td>
+	</tr>
+</table>

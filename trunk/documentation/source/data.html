@@ -1,0 +1,39 @@
+__HEAD__:Accessing Data
+__SEEA__:setdata.html
+__SEEA__:getdata.html
+__SEEA__:size.html
+<p>
+	A process that has a lockbox handle can use it to set data in the lockbox by
+	calling <a href="setdata.html">lkb_setdata</a> and read data from the lockbox
+	by calling <a href="getdata.html">lkb_getdata</a>. Each call takes an offset in
+	bytes from the start of the lockbox, a buffer containing (or to receive) the data,
+	and a number of bytes to copy into or out of the lockbox.
+</p>
+<p>
+	If a process sets data past the end of the current data in the lockbox, the
+	size of the data in the lockbox is expanded to accommodate the new data. If the
+	offset supplied to <a href="setdata.html">lkb_setdata</a> is past the end of the
+	existing data, and bytes between the old end of the data and the offset will be
+	zero.
+</p>
+<p>
+	When reading data using <a href="getdata.html">lkb_getdata</a>, any attempt to read
+	data past the end of the data in the lockbox will return only the number of bytes
+	available from the offset supplied. If the offset is past the end of the data in
+	the lockbox, <a href="getdata.html">lkb_getdata</a> will return zero and will not
+	return any data at all.
+</p>
+<p>
+	A single call to <a href="getdata.html">lkb_getdata</a> or
+	<a href="setdata.html">lkb_setdata</a> is atomic -
+	<a href="getdata.html">lkb_getdata</a> will never return data that has been
+	partially written by <a href="setdata.html">lkb_setdata</a> and partly contains
+	old data that is still to be overwritten by the same call. When two processes
+	both write to the same data area with <a href="setdata.html">lkb_setdata</a>, the
+	overlapping area of the data in the lockbox will contain data written by one call
+	or the other, but never a mix of partial data from each call.
+</p>
+<p>
+	A process can query the size of the data in a lockbox with
+	<a href="size.html">lkb_size</a>.
+</p>

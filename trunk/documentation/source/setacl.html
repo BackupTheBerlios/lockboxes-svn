@@ -1,0 +1,94 @@
+__HEAD__:lkb_setacl
+__SEEA__:create.html
+__SEEA__:getacl.html
+__SEEA__:lock.html
+__SEEA__:acl.html
+<h2>Name</h2>
+
+<p>lkb_setacl - set access control list of an open lockbox</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_setacl(	lockbox_t <var>id</var>,
+		lockbox_acl const *<var>acl</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_setacl sets the access control list of the lockbox with the handle
+	<var>id</var>. <var>acl</var> is a pointer to the new access control list. If
+	<var>acl</var> is NULL, the new access control list of the box will give the user
+	indicated by the current effective user ID LKB_ACCESS_ALL, and gives all users
+	LKB_ACCESS_READ and LKB_ACCESS_OPEN.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_setacl returns 0. On failure it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table>
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOENT
+		</td>
+		<td valign="top">
+			There is no lockbox open with handle <var>id</var>.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EPERM
+		</td>
+		<td valign="top">
+			You do not have LKB_ACCESS_SETACL permission on that lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EBUSY
+		</td>
+		<td valign="top">
+			Another user of the lockbox has the LKB_LOCK_ACL lock on the
+			lockbox.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			<var>acl</var> is not the valid address of an access control list.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			ENOMEM
+		</td>
+		<td valign="top">
+			The system ran out of memory.
+		</td>
+	</tr>
+</table>

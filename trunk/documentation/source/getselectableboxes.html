@@ -1,0 +1,67 @@
+__HEAD__:lkb_getselectableboxes
+__SEEA__:setselectcriterion.html
+__SEEA__:resetallselects.html
+<h2>Name</h2>
+
+<p>
+	lkb_getselectableboxes - get a list of lockbox handles with trigger conditions that
+	are true
+</p>
+
+<h2>Synopsis</h2>
+<pre>
+#include &lt;lockbox.h&gt;
+
+int lkb_getselectableboxes(	size_t	<var>arraysize</var>,
+				lockbox_t *<var>array</var>);
+</pre>
+
+<h2>Description</h2>
+
+<p>
+	lkb_getselectableboxes returns a list of lockbox handles which have trigger
+	conditions that are true. These are the lockbox handles that would cause a
+	select(2) to indicate the file descriptor returned by
+	<a href="openvault.html">lkb_openvault</a> has an exceptional condition.
+	<var>arraysize</var> is the number of elements in the array pointed to by
+	<var>array</var>. If more than <var>arraysize</var> lockbox handles have trigger
+	conditions that are true, only <var>arraysize</var> lockbox handles will be
+	returned.
+</p>
+
+<h2>Return Value</h2>
+
+<p>
+	On success, lkb_setselectcriterion returns the number of lockbox handles returned
+	in <var>array</var>. On failure it returns -1.
+</p>
+
+<h2>Errors</h2>
+
+<table>
+	<tr>
+		<td valign="top">
+			EIO
+		</td>
+		<td valign="top">
+			No vault is currently open.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EINTR
+		</td>
+		<td valign="top">
+			The call was interrupted by a signal.
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			EFAULT
+		</td>
+		<td valign="top">
+			<var>array</var> is not a valid pointer to <var>arraysize</var>
+			elements.
+		</td>
+	</tr>
+</table>
