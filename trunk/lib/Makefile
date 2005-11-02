@@ -34,20 +34,23 @@ calls$(LIBEXT).o: calls.c $(INCLUDES)
 
 install: liblockbox.a liblockbox.so.$(LIBVER)
 	install -d /usr/local/lib
-	(
-		umask 022
-		install -m 644 $i /usr/local/lib || exit 1
-		for i in liblockbox*.so.$LIBVER
-		do
-			ln -s $i /usr/local/lib/`echo $i | sed -e "s,\.$(LIBVER)\$,.$(LIBMAJVER),"` &&
-			ln -s $i /usr/local/lib/`echo $i | sed -e "s,\.$(LIBVER)\$,,"` ||
-			exit 1
-		done
-		for i in liblockbox*.a
-		do
-			install -m 644 $i /usr/local/lib || exit 1
-		done
+	( \
+		umask 022; \
+		for i in liblockbox*.so.$(LIBVER); \
+		do \
+			MAJLIB=/usr/local/lib/`echo $$i | sed -e "s,\.$(LIBVER)\$$,.$(LIBMAJVER),"`; \
+			NVLIB=/usr/local/lib/`echo $$i | sed -e "s,\.$(LIBVER)\$$,,"`; \
+			rm -f $$MAJLIB; \
+			rm -f $$NVLIB; \
+			install -m 644 $$i /usr/local/lib || exit 1; \
+			ln -s $$i $$MAJLIB || exit 1; \
+			ln -s $$i $$NVLIB || exit 1; \
+		done;  \
+		for i in liblockbox*.a; \
+		do \
+			install -m 644 $$i /usr/local/lib || exit 1; \
+		done \
 	)
 
 clean:
-	-rm -f *.o liblockbox*.so.$(LIBMAJVER)
+	-rm -f *.o liblockbox*.so.$(LIBVER) liblockbox*.a
