@@ -45,6 +45,14 @@ static int is_lockbox_file(struct file *f);
 
 #ifndef __x86_64__
 typedef int	lockbox32_select_fd_entry;
+#else
+static void *
+uint32_to_ptr(uint32_t u)
+{
+	size_t i = u;
+
+	return (void *) i;
+}
 #endif
 
 static int
@@ -1905,7 +1913,7 @@ lockbox_createselectfd(lockbox_perfile *pf,
 				}
 				e.lsfe_id = e32.lsfe_id;
 				e.lsfe_criteria = e32.lsfe_criteria;
-				e.lsfe_settings = (lockbox_select_criterion_setting const *) e32.lsfe_settings;
+				e.lsfe_settings = uint32_to_ptr(e32.lsfe_settings);
 				++entries32;
 			}
 			else
@@ -2306,7 +2314,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 
 			if (copy_from_user(&s, (void *)arg, sizeof(s)))
 				return -EFAULT;
-			return set_vault(pf, (char const *) s.name);
+			return set_vault(pf, uint32_to_ptr(s.name));
 		}
 
 	case LKBCALL32_LISTVAULTS:
@@ -2318,7 +2326,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 			if (copy_from_user(&s, (void *) arg, sizeof(s)))
 				return -EFAULT;
 			sizeneeded = s.sizeneeded;
-			status = list_vaults((char *) s.data, s.bufsize, &sizeneeded);
+			status = list_vaults(uint32_to_ptr(s.data), s.bufsize, &sizeneeded);
 			s.sizeneeded = sizeneeded;
 			if (copy_to_user((void *)arg, &s, sizeof(s)))
 				return -EFAULT;
@@ -2336,7 +2344,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 			sizeneeded = s.sizeneeded;
 			status = lockbox_list_boxes(pf,
 						s.shelfid,
-						(char *) s.names,
+						uint32_to_ptr(s.names),
 						s.bufsize,
 						&sizeneeded);
 			s.sizeneeded = sizeneeded;
@@ -2353,10 +2361,10 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 				return -EFAULT;
 			return lockbox_create_new(	pf,
 							s.shelfid,
-							(char const *) s.name,
-							(void const *) s.data,
+							uint32_to_ptr(s.name),
+							uint32_to_ptr(s.data),
 							s.size,
-							(lockbox_acl const *) s.acl);
+							uint32_to_ptr(s.acl));
 		}
 
 	case LKBCALL32_OPEN:
@@ -2367,7 +2375,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 				return -EFAULT;
 			return lockbox_open_existing(	pf,
 							s.shelfid,
-							(char const *) s.name);
+							uint32_to_ptr(s.name));
 		}
 
 	case LKBCALL32_GETNAME:
@@ -2381,7 +2389,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 			sizeneeded = s.sizeneeded;
 			status = lockbox_get_name(pf,
 						s.lockboxid,
-						(char *) s.name,
+						uint32_to_ptr(s.name),
 						s.bufsize,
 						&sizeneeded);
 			s.sizeneeded = sizeneeded;
@@ -2396,7 +2404,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 
 			if (copy_from_user(&s, (void *) arg, sizeof(s)))
 				return -EFAULT;
-			return lockbox_get_data(pf, s.lockboxid, (void *) s.buffer, s.size, s.offset);
+			return lockbox_get_data(pf, s.lockboxid, uint32_to_ptr(s.buffer), s.size, s.offset);
 		}
 
 	case LKBCALL32_SETDATA:
@@ -2405,7 +2413,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 
 			if (copy_from_user(&s, (void *) arg, sizeof(s)))
 				return -EFAULT;
-			return lockbox_set_data(pf, s.lockboxid, (void const *) s.buffer, s.size, s.offset);
+			return lockbox_set_data(pf, s.lockboxid, uint32_to_ptr(s.buffer), s.size, s.offset);
 		}
 
 	case LKBCALL32_SETACL:
@@ -2414,7 +2422,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 
 			if (copy_from_user(&s, (void *) arg, sizeof(s)))
 				return -EFAULT;
-			return lockbox_set_acl(pf, s.lockboxid, (lockbox_acl const *) s.acl);
+			return lockbox_set_acl(pf, s.lockboxid, uint32_to_ptr(s.acl));
 		}
 
 	case LKBCALL32_GETACL:
@@ -2427,7 +2435,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 				return -EFAULT;
 			sizeneeded = s.sizeneeded;
 			status = lockbox_get_acl(pf, s.lockboxid,
-						(lockbox_acl *) s.acl,
+						uint32_to_ptr(s.acl),
 						s.size,
 						&sizeneeded);
 			s.sizeneeded = sizeneeded;
@@ -2442,7 +2450,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 
 			if (copy_from_user(&s, (void *) arg, sizeof(s)))
 				return -EFAULT;
-			return lockbox_getselectableboxes(pf, (lockbox_t *) s.array, s.arraysize);
+			return lockbox_getselectableboxes(pf, uint32_to_ptr(s.array), s.arraysize);
 		}
 
 	case LKBCALL32_CREATESELFD:
@@ -2451,7 +2459,7 @@ ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 
 			if (copy_from_user(&s, (void *) arg, sizeof(s)))
 				return -EFAULT;
-			return lockbox_createselectfd(pf, 0, (lockbox32_select_fd_entry *) s.entries, s.count, s.targetfd);
+			return lockbox_createselectfd(pf, 0, uint32_to_ptr(s.entries), s.count, s.targetfd);
 		}
 #endif
 
