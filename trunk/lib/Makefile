@@ -3,6 +3,7 @@ include ../Makefile.conf
 LIBFILES=initmod.o calls.o
 INCLUDES=../include/lockbox.h ../include/linux/lockbox.h
 TARGETS=liblockbox.a liblockbox.so.1.0
+CFLAGS=-fpic -g -I../include
 
 default: $(TARGETS)
 

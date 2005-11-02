@@ -43,10 +43,14 @@ struct semaphore vaultlist_lock;
 
 static int is_lockbox_file(struct file *f);
 
+#ifndef __x86_64__
+typedef int	lockbox32_select_fd_entry;
+#endif
+
 static int
 get_user_string(char const *str, char **kstring)
 {
-	int len = strlen_user(str);
+	int len = strnlen_user(str, ~0UL >> 1);
 
 	char *kernelstring;
 
@@ -202,6 +206,7 @@ free_box(lockbox_box *b)
 static void
 init_shelf(lockbox_shelf *s)
 {
+	memset(s, 0, sizeof(lockbox_shelf));
 	init_MUTEX(&s->lkb_s_lock);
 }
 
@@ -299,7 +304,7 @@ set_vault(	lockbox_perfile *perfile,
 static int
 list_vaults(	char	*data,
 		int	buffersize,
-		int	*psizeneeded)
+		size_t	*psizeneeded)
 {
 	int	status = 0;
 	int	sizeneeded = 1;
@@ -707,7 +712,7 @@ lockbox_create_new(	lockbox_perfile *pf,
 			b = &s->lkb_s_boxlist;
 			if (!*kname)
 				sprintf(kname, "#%08x", s->lkb_s_seqno++);
-			
+
 			while (1)
 			{
 				if (!*b)
@@ -1411,7 +1416,7 @@ lockbox_list_boxes(	lockbox_perfile *pf,
 			int	shelf,
 			char	*data,
 			int	buffersize,
-			int	*psizeneeded)
+			size_t	*psizeneeded)
 {
 	int	status = 0;
 	lockbox_vault *v;
@@ -1823,6 +1828,7 @@ lockbox_resetallselects(	lockbox_perfile *pf)
 static int
 lockbox_createselectfd(lockbox_perfile *pf,
 			lockbox_select_fd_entry const *entries,
+			lockbox32_select_fd_entry const *entries32,
 			size_t count,
 			int	targetfd)
 {
@@ -1868,9 +1874,6 @@ lockbox_createselectfd(lockbox_perfile *pf,
 
 	if (pfNew->lkb_pf_vault)
 	{
-		fput(f);
-		down(&pfNew->lkb_pf_lock);
-		down(&pf->lkb_pf_lock);
 		status = -EINVAL;
 	}
 	else if (down_interruptible(&vaultlist_lock))
@@ -1890,12 +1893,31 @@ lockbox_createselectfd(lockbox_perfile *pf,
 		{
 			lockbox_select_fd_entry e;
 
-			if (copy_from_user(&e, entries, sizeof(lockbox_select_fd_entry)))
+#ifdef __x86_64__
+
+			if (entries32)
 			{
-				status = -EFAULT;
-				break;
+				lockbox32_select_fd_entry e32;
+				if (copy_from_user(&e32, entries32, sizeof(lockbox32_select_fd_entry)))
+				{
+					status = -EFAULT;
+					break;
+				}
+				e.lsfe_id = e32.lsfe_id;
+				e.lsfe_criteria = e32.lsfe_criteria;
+				e.lsfe_settings = (lockbox_select_criterion_setting const *) e32.lsfe_settings;
+				++entries32;
 			}
-			++entries;
+			else
+#endif
+			{
+				if (copy_from_user(&e, entries, sizeof(lockbox_select_fd_entry)))
+				{
+					status = -EFAULT;
+					break;
+				}
+				++entries;
+			}
 
 			status = lockbox_find_box(pf, e.lsfe_id, &bu);
 
@@ -2275,8 +2297,164 @@ ioctl_lockbox(struct inode *inode, struct file *file,
 
 			if (copy_from_user(&s, (void *) arg, sizeof(s)))
 				return -EFAULT;
-			return lockbox_createselectfd(pf, s.entries, s.count, s.targetfd);
+			return lockbox_createselectfd(pf, s.entries, 0, s.count, s.targetfd);
 		}
+
+#ifdef __x86_64__
+	case LKBCALL32_SETVAULT:
+		{
+			lockbox32_setvault_struct s;
+
+			if (copy_from_user(&s, (void *)arg, sizeof(s)))
+				return -EFAULT;
+			return set_vault(pf, (char const *) s.name);
+		}
+
+	case LKBCALL32_LISTVAULTS:
+		{
+			int status;
+			lockbox32_listvaults_struct s;
+			size_t	sizeneeded;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			sizeneeded = s.sizeneeded;
+			status = list_vaults((char *) s.data, s.bufsize, &sizeneeded);
+			s.sizeneeded = sizeneeded;
+			if (copy_to_user((void *)arg, &s, sizeof(s)))
+				return -EFAULT;
+			return status;
+		}
+
+	case LKBCALL32_LISTBOXES:
+		{
+			lockbox32_listboxes_struct s;
+			int	status;
+			size_t	sizeneeded;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			sizeneeded = s.sizeneeded;
+			status = lockbox_list_boxes(pf,
+						s.shelfid,
+						(char *) s.names,
+						s.bufsize,
+						&sizeneeded);
+			s.sizeneeded = sizeneeded;
+			if (copy_to_user((void *) arg, &s, sizeof(s)))
+				return -EFAULT;
+			return status;
+		}
+
+	case LKBCALL32_CREATE:
+		{
+			lockbox32_create_struct s;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			return lockbox_create_new(	pf,
+							s.shelfid,
+							(char const *) s.name,
+							(void const *) s.data,
+							s.size,
+							(lockbox_acl const *) s.acl);
+		}
+
+	case LKBCALL32_OPEN:
+		{
+			lockbox32_open_struct s;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			return lockbox_open_existing(	pf,
+							s.shelfid,
+							(char const *) s.name);
+		}
+
+	case LKBCALL32_GETNAME:
+		{
+			lockbox32_getname_struct s;
+			int	status;
+			size_t	sizeneeded;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			sizeneeded = s.sizeneeded;
+			status = lockbox_get_name(pf,
+						s.lockboxid,
+						(char *) s.name,
+						s.bufsize,
+						&sizeneeded);
+			s.sizeneeded = sizeneeded;
+			if (copy_to_user((void *) arg, &s, sizeof(s)))
+				return -EFAULT;
+			return status;
+		}
+
+	case LKBCALL32_GETDATA:
+		{
+			lockbox32_getdata_struct s;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			return lockbox_get_data(pf, s.lockboxid, (void *) s.buffer, s.size, s.offset);
+		}
+
+	case LKBCALL32_SETDATA:
+		{
+			lockbox32_setdata_struct s;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			return lockbox_set_data(pf, s.lockboxid, (void const *) s.buffer, s.size, s.offset);
+		}
+
+	case LKBCALL32_SETACL:
+		{
+			lockbox32_setacl_struct s;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			return lockbox_set_acl(pf, s.lockboxid, (lockbox_acl const *) s.acl);
+		}
+
+	case LKBCALL32_GETACL:
+		{
+			lockbox32_getacl_struct s;
+			int status;
+			size_t sizeneeded;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			sizeneeded = s.sizeneeded;
+			status = lockbox_get_acl(pf, s.lockboxid,
+						(lockbox_acl *) s.acl,
+						s.size,
+						&sizeneeded);
+			s.sizeneeded = sizeneeded;
+			if (copy_to_user((void *) arg, &s, sizeof(s)))
+				return -EFAULT;
+			return status;
+		}
+
+	case LKBCALL32_GETSELBOXES:
+		{
+			lockbox32_getselectableboxes_struct s;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			return lockbox_getselectableboxes(pf, (lockbox_t *) s.array, s.arraysize);
+		}
+
+	case LKBCALL32_CREATESELFD:
+		{
+			lockbox32_createselectfd_struct s;
+
+			if (copy_from_user(&s, (void *) arg, sizeof(s)))
+				return -EFAULT;
+			return lockbox_createselectfd(pf, 0, (lockbox32_select_fd_entry *) s.entries, s.count, s.targetfd);
+		}
+#endif
 
 	default:
 		return -EINVAL;

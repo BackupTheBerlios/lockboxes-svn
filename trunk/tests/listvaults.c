@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <sys/types.h>
+#include <stdlib.h>
 #include "lockbox.h"
 
 int

@@ -59,6 +59,15 @@ typedef struct
 	lockbox_select_criterion_setting const *lsfe_settings;
 } lockbox_select_fd_entry;
 
+#if __x86_64__
+typedef struct
+{
+	lockbox_t	lsfe_id;
+	uint32_t	lsfe_criteria;
+	uint32_t	lsfe_settings;
+} lockbox32_select_fd_entry;
+#endif
+
 #define	LKB_ACL_SIZE(e)	(sizeof(lockbox_acl_header) + \
 			 (e) * sizeof(lockbox_acl_entry))
 

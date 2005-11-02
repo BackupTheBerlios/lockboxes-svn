@@ -26,6 +26,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <sys/select.h>
+#include <stdlib.h>
 #include "lockbox.h"
 
 static int	status = 0;
