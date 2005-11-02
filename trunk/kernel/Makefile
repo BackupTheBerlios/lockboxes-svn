@@ -1,7 +1,7 @@
 
 KERNEL_VERSION = $(shell uname -r)
 
-MODULE_DIR = $(DESTDIR)/lib/modules/$(KERNEL_VERSION)/kernel/drivers/media/video/
+MODULE_DIR = $(DESTDIR)/lib/modules/$(KERNEL_VERSION)/kernel/kernel
 KERNEL_SRC = /lib/modules/$(KERNEL_VERSION)/build
 KERNEL_HEADERS = $(KERNEL_SRC)/include
 DEPMOD = /sbin/depmod
