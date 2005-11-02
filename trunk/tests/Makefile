@@ -4,8 +4,9 @@ INCLUDES=../include/lockbox.h
 LIBS=../lib/liblockbox.a
 DEPS=$(INCLUDES) $(LIBS)
 LIBARGS=-L../lib -llockbox
+TARGETS=createbox holdvault listboxes listvaults lkbtests
 
-default: createbox holdvault listboxes listvaults lkbtests
+default: $(TARGETS)
 
 createbox.o: createbox.c $(DEPS)
 holdvault.o: holdvault.c $(DEPS)
@@ -27,3 +28,6 @@ listvaults: listvaults.o $(LIBS)
 
 lkbtests: lkbtests.o $(LIBS)
 	gcc -g -o lkbtests lkbtests.o $(LIBARGS)
+
+clean:
+	-rm -f $(TARGETS) $(TARGETS:%=%.o)

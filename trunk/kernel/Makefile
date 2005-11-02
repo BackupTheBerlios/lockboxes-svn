@@ -28,3 +28,6 @@ install:
 uninstall:
 	for f in $(MODULES:%.o=%.ko); do rm $(MODULE_DIR)/$$f; done
 	$(DEPMOD) -ae
+
+clean:
+	$(MAKE) -C $(KERNEL_SRC) SUBDIRS=$(SRCDIR) MODVERDIR=$(MODVERDIR) clean

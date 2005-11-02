@@ -9,3 +9,9 @@ install:
 	( cd lib && make install )
 	( cd include && make install )
 	( cd documentation && make install )
+
+clean:
+	( cd kernel && make clean )
+	( cd lib && make clean )
+	( cd tests && make clean )
+	( cd documentation && make clean )
