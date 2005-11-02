@@ -262,7 +262,7 @@ typedef struct
 	uint32_t	name;
 	uint32_t	data;
 	uint32_t	size;
-	uint32_t 	*acl;
+	uint32_t 	acl;
 } lockbox32_create_struct;
 
 typedef struct
@@ -287,7 +287,7 @@ typedef struct
 	lockbox_t	lockboxid;
 	uint32_t	buffer;
 	uint32_t	size;
-	size_t		offset;
+	uint32_t	offset;
 } lockbox32_getdata_struct;
 
 typedef struct
@@ -296,7 +296,7 @@ typedef struct
 	lockbox_t	lockboxid;
 	uint32_t	buffer;
 	uint32_t	size;
-	size_t		offset;
+	uint32_t	offset;
 } lockbox32_setdata_struct;
 
 typedef struct

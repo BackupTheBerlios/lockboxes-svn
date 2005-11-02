@@ -2045,9 +2045,8 @@ read_lockbox(	struct file * file,
 	return -EIO;
 }
 
-static int
-ioctl_lockbox(struct inode *inode, struct file *file,
-	      unsigned int cmd, unsigned long arg)
+static long
+ioctl_lockbox(struct file *file, unsigned int cmd, unsigned long arg)
 {
 	uint32_t	callid;
 	lockbox_perfile *pf = file->private_data;
@@ -2529,7 +2528,8 @@ static struct
 file_operations lockbox_fops = {
 	read:		read_lockbox,
 	write:		write_lockbox,
-	ioctl:		ioctl_lockbox,
+	unlocked_ioctl:	ioctl_lockbox,
+	compat_ioctl:	ioctl_lockbox,
 	open:		open_lockbox,
 	release:	close_lockbox,
 	poll:		poll_lockbox
