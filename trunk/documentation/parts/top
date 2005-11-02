@@ -22,8 +22,12 @@
 				<p>
 					<a href="lgpl.html" class="navlink">Library License</a><br />
 					<a href="gpl.html" class="navlink">License</a><br />
-					<a href="download.html" class="navlink">Download</a><br />
+					<a href="https://developer.berlios.de/project/showfiles.php?group_id=5163" class="navlink">Download</a><br />
 					<a href="install.html" class="navlink">Installing</a>
+				</p>
+				<p align="center">Hosted by<br />
+					<a href="http://developer.berlios.de/projects/lockboxes"
+					   title="BerliOS Developer"><img src="http://developer.berlios.de/bslogo.php?group_id=5163" width="124px" height="32px" border="0" alt="BerliOS Developer Logo"></a>
 				</p>
 			</td>
 			<td>
